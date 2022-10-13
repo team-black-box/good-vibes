@@ -221,7 +221,7 @@ const run = async (options?: Options) => {
     []
   ).length;
   let failedTests: TestResult[] = [];
-  const reporter = options.reportTestResults
+  const reporter = options?.reportTestResults
     ? new SimpleTAPReporter(options.testResultsDirectory)
     : undefined;
   if (testStore[DEBUG]?.tests?.length) {

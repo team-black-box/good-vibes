@@ -37,7 +37,7 @@ Here is how you would write a test using good-vibes for this function
 ```javascript
 // defined in ./test/code.test.js
 import { codeToTest } from "./src/code";
-import { test, run } from "good-vibes";
+import run, { test } from "good-vibes";
 // alternatively `const { test, run } = require('good-vibes');
 
 test("My first test", (context) => {
@@ -143,7 +143,7 @@ Here is an example of an asynchronous test
 
 ```javascript
 // defined in ./async.test.js
-import { test, run } from "good-vibes";
+import run, { test } from "good-vibes";
 
 const sayGreeting = async (message) => {
   return new Promise((resolve, reject) => {
@@ -173,7 +173,7 @@ The `test` api supports `groupName` as the third argument which allows you to gr
 ### Example
 
 ```javascript
-import { before, test, after, run } from "good-vibes";
+import run, { before, test, after } from "good-vibes";
 
 const MY_GROUP = "My Group";
 
@@ -242,7 +242,7 @@ It can sometimes be verbose to have to specify the group name in each of `before
 Lets rewrite the above example now using the `group` api.
 
 ```javascript
-import { group, run } from "good-vibes";
+import run, { group } from "good-vibes";
 
 const MY_GROUP = "My Group";
 
@@ -385,7 +385,7 @@ sync(groupName?: string) // groupName defaults to "Default"
 ### Using `sync` api
 
 ```javascript
-import { before, test, sync, run } from "good-vibes";
+import run, { before, test, sync } from "good-vibes";
 
 const MY_GROUP = "My Group";
 
@@ -428,7 +428,7 @@ run();
 ### Using the concise groups `sync` api
 
 ```javascript
-import { group, run } from "good-vibes"; // import sync from good-vibes
+import run, { group } from "good-vibes"; // import sync from good-vibes
 
 const MY_GROUP = "My Group";
 
@@ -470,7 +470,7 @@ good-vibes support this using a special purpose group name called `Debug`. `Debu
 ### Using the `Debug` group
 
 ```javascript
-const { before, test, DEBUG, run } = require("../lib/index");
+const run, { before, test, DEBUG } = require("../lib/index");
 
 // When running in debug mode only tests tagged with DEBUG group are run,
 // all other tests are skipped
@@ -499,7 +499,7 @@ run();
 ### Concise groups with `Debug`
 
 ```javascript
-import { group, run. DEBUG } from "good-vibes";
+import run, { group, DEBUG } from "good-vibes";
 
 const MY_GROUP = "My Group";
 
@@ -516,9 +516,13 @@ before((context) => {
 // always ensure that you run your before blocks in DEBUG mode too
 // if you before some setup for the test being debugged
 
-test("My Test", (ctx) => {
-  ctx.check(5, numbers.length).check("1,2,3,4,5", numbers.join(",")).done();
-}, DEBUG); // running only one test in DEBUG mode
+test(
+  "My Test",
+  (ctx) => {
+    ctx.check(5, numbers.length).check("1,2,3,4,5", numbers.join(",")).done();
+  },
+  DEBUG
+); // running only one test in DEBUG mode
 
 test("My Test", (ctx) => {
   ctx.check(7, strings.length).check("sample values", strings.join(" ")).done();
