@@ -53,6 +53,17 @@ const testStore: GroupedTests = {
   },
 };
 
+const logTime = (startTime: number, endTime: number, options: Options) => {
+  log(
+    `Finished: After script in ${
+      (endTime - startTime) /
+      (options.executionTimePrecision
+        ? Math.pow(10, options.executionTimePrecision)
+        : 1000)
+    } seconds\n`
+  );
+};
+
 const banner = () => {
   log(
     "\nWelcome to Good Vibes\n\nA Node.js testing library dedicated to Alicia Keys' Tiny Desk Performance\n\nWatch it here: https://www.youtube.com/watch?v=uwUt1fVLb3E\n"
@@ -140,15 +151,7 @@ const runOneTest = async (
     };
   }
   const endTime = new Date().valueOf();
-  log(
-    `Finished: ${test.name} [${result.status ? "PASSED" : "FAILED"} in ${
-      (endTime - startTime) /
-      (options.executionTimePrecision
-        ? Math.pow(10, options.executionTimePrecision)
-        : 1000)
-    } seconds]`,
-    result.status ? LogLevel.SUCCESS : LogLevel.ERROR
-  );
+  logTime(startTime, endTime, options);
   return Promise.resolve(result);
 };
 
@@ -181,14 +184,7 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(before, "Before");
     const endTime = new Date().valueOf();
-    log(
-      `Finished: Before script in ${
-        (endTime - startTime) /
-        (options.executionTimePrecision
-          ? Math.pow(10, options.executionTimePrecision)
-          : 1000)
-      } seconds\n`
-    );
+    logTime(startTime, endTime, options);
   }
 
   let results: TestResult[] = [];
@@ -206,14 +202,7 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(after, "After");
     const endTime = new Date().valueOf();
-    log(
-      `Finished: After script in ${
-        (endTime - startTime) /
-        (options.executionTimePrecision
-          ? Math.pow(10, options.executionTimePrecision)
-          : 1000)
-      } seconds\n`
-    );
+    logTime(startTime, endTime, options);
   }
   log(`\nFinished running ${tests.length} tests from ${group} group\n`);
   reporter?.add(group, results);
