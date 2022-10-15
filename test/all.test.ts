@@ -6,6 +6,7 @@ import "./synchronous.test";
 import "./failing.test"; // uncomment to see failing test behavior
 // require("./debug.test"); // uncomment to see debug test behavior
 import run from "../src/index";
+// import "./precisionControl.test";
 
 run({
   returnCodeOnFailure: 0,

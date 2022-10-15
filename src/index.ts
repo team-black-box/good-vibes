@@ -53,16 +53,11 @@ const testStore: GroupedTests = {
   },
 };
 
-const logTime = (startTime: number, endTime: number, options: Options) => {
-  log(
-    `Finished: After script in ${
-      (endTime - startTime) /
-      (options.executionTimePrecision
-        ? Math.pow(10, options.executionTimePrecision)
-        : 1000)
-    } seconds\n`
-  );
-};
+export const calculateExecutionTime = (
+  startTime: number,
+  endTime: number,
+  precision?: number
+) => (endTime - startTime) / (precision ? Math.pow(10, precision) : 1000);
 
 const banner = () => {
   log(
@@ -151,7 +146,13 @@ const runOneTest = async (
     };
   }
   const endTime = new Date().valueOf();
-  logTime(startTime, endTime, options);
+  log(
+    `Finished: After script in ${calculateExecutionTime(
+      startTime,
+      endTime,
+      options?.executionTimePrecision
+    )} seconds\n`
+  );
   return Promise.resolve(result);
 };
 
@@ -184,7 +185,13 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(before, "Before");
     const endTime = new Date().valueOf();
-    logTime(startTime, endTime, options);
+    log(
+      `Finished: After script in ${calculateExecutionTime(
+        startTime,
+        endTime,
+        options?.executionTimePrecision
+      )} seconds\n`
+    );
   }
 
   let results: TestResult[] = [];
@@ -202,7 +209,13 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(after, "After");
     const endTime = new Date().valueOf();
-    logTime(startTime, endTime, options);
+    log(
+      `Finished: After script in ${calculateExecutionTime(
+        startTime,
+        endTime,
+        options?.executionTimePrecision
+      )} seconds\n`
+    );
   }
   log(`\nFinished running ${tests.length} tests from ${group} group\n`);
   reporter?.add(group, results);
