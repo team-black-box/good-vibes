@@ -3,6 +3,8 @@ import TestContext from "./TestContext";
 import log, { LogLevel } from "./log";
 import SimpleTAPReporter from "./SimpleTAPReporter";
 
+const DEFAULT_EXECUTION_TIME_PRECISION = 1000;
+
 interface BeforeAfter {
   (context: Context): void;
 }
@@ -40,6 +42,7 @@ interface Options {
   returnCodeOnFailure?: number;
   reportTestResults?: boolean;
   testResultsDirectory?: string;
+  executionTimePrecision?: number;
 }
 
 const DEFAULT_TEST_GROUP = "Default";
@@ -51,6 +54,14 @@ const testStore: GroupedTests = {
     tests: [],
   },
 };
+
+export const calculateExecutionTime = (
+  startTime: number,
+  endTime: number,
+  precision?: number
+) =>
+  (endTime - startTime) /
+  (precision ? Math.pow(10, precision) : DEFAULT_EXECUTION_TIME_PRECISION);
 
 const banner = () => {
   log(
@@ -140,11 +151,16 @@ const runOneTest = async (
   }
   const endTime = new Date().valueOf();
   log(
-    `Finished: ${test.name} [${result.status ? "PASSED" : "FAILED"} in ${
-      (endTime - startTime) / 1000
-    } seconds]`,
+    `Finished: ${test.name} [${
+      result.status ? "PASSED" : "FAILED"
+    } in ${calculateExecutionTime(
+      startTime,
+      endTime,
+      options?.executionTimePrecision
+    )} seconds]`,
     result.status ? LogLevel.SUCCESS : LogLevel.ERROR
   );
+
   return Promise.resolve(result);
 };
 
@@ -177,7 +193,13 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(before, "Before");
     const endTime = new Date().valueOf();
-    log(`Finished: Before script in ${(endTime - startTime) / 1000} seconds\n`);
+    log(
+      `Finished: Before script in ${calculateExecutionTime(
+        startTime,
+        endTime,
+        options?.executionTimePrecision
+      )} seconds\n`
+    );
   }
 
   let results: TestResult[] = [];
@@ -195,7 +217,13 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(after, "After");
     const endTime = new Date().valueOf();
-    log(`Finished: After script in ${(endTime - startTime) / 1000} seconds\n`);
+    log(
+      `Finished: After script in ${calculateExecutionTime(
+        startTime,
+        endTime,
+        options?.executionTimePrecision
+      )} seconds\n`
+    );
   }
   log(`\nFinished running ${tests.length} tests from ${group} group\n`);
   reporter?.add(group, results);
