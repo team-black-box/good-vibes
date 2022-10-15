@@ -3,6 +3,8 @@ import TestContext from "./TestContext";
 import log, { LogLevel } from "./log";
 import SimpleTAPReporter from "./SimpleTAPReporter";
 
+const DEFAULT_EXECUTION_TIME_PRECISION = 1000;
+
 interface BeforeAfter {
   (context: Context): void;
 }
@@ -57,7 +59,9 @@ export const calculateExecutionTime = (
   startTime: number,
   endTime: number,
   precision?: number
-) => (endTime - startTime) / (precision ? Math.pow(10, precision) : 1000);
+) =>
+  (endTime - startTime) /
+  (precision ? Math.pow(10, precision) : DEFAULT_EXECUTION_TIME_PRECISION);
 
 const banner = () => {
   log(
