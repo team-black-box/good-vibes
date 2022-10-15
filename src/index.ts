@@ -40,6 +40,7 @@ interface Options {
   returnCodeOnFailure?: number;
   reportTestResults?: boolean;
   testResultsDirectory?: string;
+  executionTimePrecision?: number;
 }
 
 const DEFAULT_TEST_GROUP = "Default";
@@ -141,7 +142,10 @@ const runOneTest = async (
   const endTime = new Date().valueOf();
   log(
     `Finished: ${test.name} [${result.status ? "PASSED" : "FAILED"} in ${
-      (endTime - startTime) / 1000
+      (endTime - startTime) /
+      (options.executionTimePrecision
+        ? Math.pow(10, options.executionTimePrecision)
+        : 1000)
     } seconds]`,
     result.status ? LogLevel.SUCCESS : LogLevel.ERROR
   );
@@ -177,7 +181,14 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(before, "Before");
     const endTime = new Date().valueOf();
-    log(`Finished: Before script in ${(endTime - startTime) / 1000} seconds\n`);
+    log(
+      `Finished: Before script in ${
+        (endTime - startTime) /
+        (options.executionTimePrecision
+          ? Math.pow(10, options.executionTimePrecision)
+          : 1000)
+      } seconds\n`
+    );
   }
 
   let results: TestResult[] = [];
@@ -195,7 +206,14 @@ const runTestsInAGroup = async (
     const startTime = new Date().valueOf();
     await runBeforeOrAfter(after, "After");
     const endTime = new Date().valueOf();
-    log(`Finished: After script in ${(endTime - startTime) / 1000} seconds\n`);
+    log(
+      `Finished: After script in ${
+        (endTime - startTime) /
+        (options.executionTimePrecision
+          ? Math.pow(10, options.executionTimePrecision)
+          : 1000)
+      } seconds\n`
+    );
   }
   log(`\nFinished running ${tests.length} tests from ${group} group\n`);
   reporter?.add(group, results);
