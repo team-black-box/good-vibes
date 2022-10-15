@@ -151,12 +151,16 @@ const runOneTest = async (
   }
   const endTime = new Date().valueOf();
   log(
-    `Finished: After script in ${calculateExecutionTime(
+    `Finished: ${test.name} [${
+      result.status ? "PASSED" : "FAILED"
+    } in ${calculateExecutionTime(
       startTime,
       endTime,
       options?.executionTimePrecision
-    )} seconds\n`
+    )} seconds]`,
+    result.status ? LogLevel.SUCCESS : LogLevel.ERROR
   );
+
   return Promise.resolve(result);
 };
 
@@ -190,7 +194,7 @@ const runTestsInAGroup = async (
     await runBeforeOrAfter(before, "Before");
     const endTime = new Date().valueOf();
     log(
-      `Finished: After script in ${calculateExecutionTime(
+      `Finished: Before script in ${calculateExecutionTime(
         startTime,
         endTime,
         options?.executionTimePrecision
