@@ -118,6 +118,7 @@ Calling the `run()` api starts the test execution. It accepts a configuration ob
 run({
   timeout: 300_000, // in milliseconds
   snapshotsDirectory: "./test/__snapshots/", // string
+  executionTimePrecision: 4, // number
 });
 ```
 
@@ -130,6 +131,10 @@ Default is set to `5 minutes`. After 5 minutes good-vibes will end all test exec
 #### snapshotsDirectory
 
 Default value is set to `./test/__snapshots__/`. For more details see section on `Snapshot Testing` below.
+
+#### executionTimePrecision
+
+This option specifies the precision to which execution time of the tests are calculated . It is an optional value which is set to a default value of `3`.
 
 #### Running tests from multiple files
 
