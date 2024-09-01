@@ -50,7 +50,7 @@
   "homepage": "https://github.com/subramanian-elavathur/good-vibes#readme",
   "devDependencies": {
     "@types/node": "^18.7.13",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
     "@typescript-eslint/parser": "^5.10.0",
     "codecov": "^3.8.3",
     "eslint": "^8.7.0",
